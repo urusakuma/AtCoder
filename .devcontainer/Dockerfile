@@ -1,4 +1,4 @@
-FROM python:3.8.2
+FROM python:3.8-slim-bookworm
 
 ARG USERNAME=vscode
 ARG GROUPNAME=${USERNAME}
@@ -22,5 +22,18 @@ RUN python -m pip install --upgrade pip \
     && pip install -r /tmp/requirements.txt
 
 # コンテスト補助ツールをインストール
-RUN pip3 install online-judge-tools
-RUN npm install -g atcoder-cli
+RUN pip3 install online-judge-tools \
+    && npm install -g atcoder-cli \
+    && pip3 install aclogin
+
+# .config ディレクトリを作成して所有権を変更
+RUN mkdir -p /home/$USERNAME/.config/atcoder-cli-nodejs/python \
+    && chown -R $USERNAME:$GROUPNAME /home/$USERNAME/.config
+
+# エイリアスを.bashrcに追加
+COPY aliases.sh /home/$USERNAME/
+RUN cat /home/$USERNAME/aliases.sh >> /home/$USERNAME/.bashrc
+
+# atcoder-cliの設定ファイルをコピー
+COPY main.py /home/$USERNAME/.config/atcoder-cli-nodejs/python/
+COPY template.json /home/$USERNAME/.config/atcoder-cli-nodejs/python/
