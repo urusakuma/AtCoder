@@ -37,3 +37,5 @@ RUN cat /home/$USERNAME/aliases.sh >> /home/$USERNAME/.bashrc
 # atcoder-cliの設定ファイルをコピー
 COPY main.py /home/$USERNAME/.config/atcoder-cli-nodejs/python/
 COPY template.json /home/$USERNAME/.config/atcoder-cli-nodejs/python/
+COPY config.json /home/$USERNAME/.config/atcoder-cli-nodejs/
+

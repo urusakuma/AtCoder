@@ -9,7 +9,7 @@ alias sb='acc s main.py -- --guess-python-interpreter pypy'
 alias sb2='acc s main.py'
 
 # コンテストフォルダへ移動
-alias c='cd contest'
+alias c='cd /atcoder_python/contest/'
 
 # main.pyを開く
 alias o='code main.py'
