@@ -1,40 +1,26 @@
-import sys
-
-
-input = sys.stdin.readline
 N, M, L, S, T = map(int, input().split())
-cost = dict[tuple[int, int], list[int]]()
-root = dict[int, list[int]]()
+graph: list[list[tuple[int, int]]] = [[]for _ in range(N+1)]
 for i in range(M):
     u, v, c = map(int, input().split())
-    if u not in root:
-        root[u] = []
-    root[u].append(v)
-    if (u, v) not in cost:
-        cost[(u, v)] = []
-    cost[(u, v)].append(c)
+    graph[u].append((v, c))
 
 
 def main():
-    ans = set()
-    fn(0, 1, 0, ans)
-    l = list(ans)
-    l.sort()
-    print(*l)
+    ok = [False for _ in range(N+1)]
+    fn(0, 1, 0, ok)
+    ans = [i for i in range(N+1) if ok[i]]
+    print(*ans)
 
 
-def fn(l: int, u: int, c: int, ans: set):
+def fn(l: int, u: int, c: int, ans: list):
     if c > T:
         return
     elif l == L:
         if c >= S:
-            ans.add(u)
+            ans[u] = True
         return
-    if u not in root:
-        return
-    for v in root[u]:
-        for cs in cost[(u, v)]:
-            fn(l+1, v, c+cs, ans)
+    for v in graph[u]:
+        fn(l+1, v[0], c+v[1], ans)
 
 
 if __name__ == "__main__":
