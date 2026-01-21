@@ -17,7 +17,7 @@ RUN apt-get update && \
     apt-get install -y python3-pip pypy3 nodejs npm
 
 # pythonライブラリをインストール
-COPY requirements.txt /tmp/
+COPY .devcontainer/requirements.txt /tmp/
 RUN python -m pip install --upgrade pip \
     && pip install -r /tmp/requirements.txt
 
@@ -30,12 +30,18 @@ RUN pip3 install online-judge-tools \
 RUN mkdir -p /home/$USERNAME/.config/atcoder-cli-nodejs/python \
     && chown -R $USERNAME:$GROUPNAME /home/$USERNAME/.config
 
+
+# 便利ツールをコピー
+COPY scripts/ /atcoder_python/scripts/
+
+# 便利ツールの実行権限を付与
+RUN chmod +x /atcoder_python/scripts/*.py 
+
 # エイリアスを.bashrcに追加
-COPY aliases.sh /home/$USERNAME/
+COPY .devcontainer/aliases.sh /home/$USERNAME/
 RUN cat /home/$USERNAME/aliases.sh >> /home/$USERNAME/.bashrc
 
 # atcoder-cliの設定ファイルをコピー
-COPY main.py /home/$USERNAME/.config/atcoder-cli-nodejs/python/
-COPY template.json /home/$USERNAME/.config/atcoder-cli-nodejs/python/
-COPY config.json /home/$USERNAME/.config/atcoder-cli-nodejs/
-
+COPY .devcontainer/main.py /home/$USERNAME/.config/atcoder-cli-nodejs/python/
+COPY .devcontainer/template.json /home/$USERNAME/.config/atcoder-cli-nodejs/python/
+COPY .devcontainer/config.json /home/$USERNAME/.config/atcoder-cli-nodejs/

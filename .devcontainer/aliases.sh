@@ -1,5 +1,7 @@
+export PATH="$HOME/bin:/atcoder_python/bin:$PATH"
+
 # 解答提出のためのマージ
-alias m='python /atcoder_python/merge.py'
+alias m='merge.py'
 
 # コンテストフォルダへ移動
 alias c='cd /atcoder_python/contest/'
@@ -9,6 +11,9 @@ alias o='code main.py'
 
 # 出力確認用
 alias d='python main.py'
+
+alias g='testcase_generator.py'
+
 
 test() {
     if [ $# -eq 0 ]; then

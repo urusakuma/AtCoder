@@ -1,25 +1,32 @@
 {
 	"name": "atcoder-python",
-	"dockerComposeFile": "docker-compose.yml",
-	"service": "python",
+	"build": {
+		"context": "..",
+		"dockerfile": "Dockerfile"
+	},
 	"workspaceFolder": "/atcoder_python",
-
-	// Use this environment variable if you need to bind mount your local source code into a new container.
-	"remoteEnv": {
-		"../../atcoder_python": "/atcoder_python"
+	"customizations": {
+		"vscode": {	
+			"extensions": [
+				"ms-python.python",
+				"ms-python.autopep8"
+			],
+			"settings": {
+				"terminal.integrated.defaultProfile.linux": "bash",
+				"terminal.integrated.profiles.linux": {
+					"bash": {
+					"path": "/bin/bash"
+					}
+				},
+				"github.copilot.enable": {
+					"*": false
+				}
+			}
+		}
 	},
-	
-	// Set *default* container specific settings.json values on container create.
-	"settings": { 
-		"terminal.integrated.shell.linux": "/bin/bash"
-	},
-
-	// Add the IDs of extensions you want installed when the container is created.
-	"extensions": [
-		"ms-python.python",
-		"ms-python.autopep8"
+	"mounts": [
+		"source=${localWorkspaceFolder},target=/atcoder_python,type=bind"
 	],
-
 	// Comment out connect as root instead. More info: https://aka.ms/vscode-remote/containers/non-root.
 	"remoteUser": "vscode"
 }
