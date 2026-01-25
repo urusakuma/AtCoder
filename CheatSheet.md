@@ -162,3 +162,9 @@
 ### 2次元DP（例：N×M）
 
 - `dp = [[INF]*(M+1) for _ in range(N+1)]`
+### メモ
+```
+from functools import cache
+@cache
+def fn():
+```
