@@ -73,12 +73,8 @@ def next_sample_filename(prefix="sample-", suffix=".in"):
 
 def generate():
     # 例：N と N 個の整数
-    N = rand_int(100, 10000)
-    M = rand_int(10, 10000)
-    L = rand_int(10, 100)
-    S = rand_int(10, 100)
-    T = rand_int(10, 100)
-    A = rand_list(N, 1, 100)
+    N = 3*10**5
+    A = rand_list(N, 1, 10**9)
     return str(N) + "\n" + " ".join(map(str, A))
 
 
