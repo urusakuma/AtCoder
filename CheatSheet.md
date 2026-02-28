@@ -40,6 +40,7 @@
 - **get**：`d.get(a)`
 - **has**：`a in d`
 - **remove**：`del s[a]`
+- **init int** :  `from collections import defaultdict`, `d = defaultdict(int)`
 ### スタック
 
 - **最後尾の取得**：`list[-n]`
@@ -110,6 +111,7 @@
 - `from collections import Counter, deque`
 - **カウント**：`cnt = Counter(A)`
 - **キュー / 両端キュー**：  
+  `from collections import deque`
   `q = deque()`  
   `q.append(x)`  
   `q.popleft()`
