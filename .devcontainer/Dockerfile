@@ -1,47 +1,37 @@
-FROM python:3.8-slim-bookworm
-
+FROM pypy:3.11-7.3.20-bookworm
 ARG USERNAME=vscode
 ARG GROUPNAME=${USERNAME}
 ARG USER_UID=1000
 ARG USER_GID=${USER_UID}
 
+# aptでのインストール
 RUN apt-get update \
-    && groupadd --gid ${USER_GID} ${GROUPNAME} \
-    && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME} \
-    && apt-get -y install sudo \ 
-    && echo ${USERNAME} ALL=\(ALL\) NOPASSWD:ALL > /etc/sudoers.d/${USERNAME} \
-    && chmod 0440 /etc/sudoers.d/${USERNAME}
+    && apt-get install -y git nodejs npm \
+    && rm -rf /var/lib/apt/lists/*
 
-# Python3, PyPy3の環境想定
-RUN apt-get update && \
-    apt-get install -y python3-pip pypy3 nodejs npm
-
-# pythonライブラリをインストール
+# ユーザー作成
+RUN groupadd --gid ${USER_GID} ${GROUPNAME} \
+    && useradd -s /bin/bash --uid ${USER_UID} --gid ${USER_GID} -m ${USERNAME}
+# pipでのインストール
 COPY .devcontainer/requirements.txt /tmp/
 RUN python -m pip install --upgrade pip \
-    && pip install -r /tmp/requirements.txt
+    && pip install --no-cache-dir -r /tmp/requirements.txt \
+    && rm -f /tmp/requirements.txt
 
-# コンテスト補助ツールをインストール
-RUN pip3 install online-judge-tools \
-    && npm install -g atcoder-cli \
-    && pip3 install aclogin
+# npmでのインストール
+RUN npm install -g atcoder-cli
 
 # .config ディレクトリを作成して所有権を変更
 RUN mkdir -p /home/$USERNAME/.config/atcoder-cli-nodejs/python \
     && chown -R $USERNAME:$GROUPNAME /home/$USERNAME/.config
 
-
-# 便利ツールをコピー
-COPY scripts/ /atcoder_python/scripts/
-
-# 便利ツールの実行権限を付与
-RUN chmod +x /atcoder_python/scripts/*.py 
-
 # エイリアスを.bashrcに追加
-COPY .devcontainer/aliases.sh /home/$USERNAME/
-RUN cat /home/$USERNAME/aliases.sh >> /home/$USERNAME/.bashrc
+COPY --chown=${USERNAME}:${GROUPNAME} .devcontainer/aliases.sh /tmp/aliases.sh
+RUN cat /tmp/aliases.sh >> /home/$USERNAME/.bashrc
 
 # atcoder-cliの設定ファイルをコピー
-COPY .devcontainer/main.py /home/$USERNAME/.config/atcoder-cli-nodejs/python/
-COPY .devcontainer/template.json /home/$USERNAME/.config/atcoder-cli-nodejs/python/
-COPY .devcontainer/config.json /home/$USERNAME/.config/atcoder-cli-nodejs/
+COPY --chown=${USERNAME}:${GROUPNAME} .devcontainer/main.py /home/${USERNAME}/.config/atcoder-cli-nodejs/python/
+COPY --chown=${USERNAME}:${GROUPNAME} .devcontainer/template.json /home/${USERNAME}/.config/atcoder-cli-nodejs/python/
+COPY --chown=${USERNAME}:${GROUPNAME} .devcontainer/config.json /home/${USERNAME}/.config/atcoder-cli-nodejs/
+
+RUN rm -rf /tmp/*
