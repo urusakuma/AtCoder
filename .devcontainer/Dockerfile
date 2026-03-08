@@ -6,7 +6,7 @@ ARG USER_GID=${USER_UID}
 
 # aptでのインストール
 RUN apt-get update \
-    && apt-get install -y git nodejs npm \
+    && apt-get install -y git nodejs npm sudo pypy3\
     && rm -rf /var/lib/apt/lists/*
 
 # ユーザー作成
